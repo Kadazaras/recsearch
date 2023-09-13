@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col">
+        	<form action="" method="post">
+		{{ wtf.form_field(form.selector,id='selector', onchange="window.location.href='/submitted/' + document.getElementById('selector').value") }}
+	</form>
+        </div>
+     </div>
+
+         <div class="row">
+
+                    <div class="col">
+
+		    {{ div|safe }}
+    {{ script|safe }}
+    </div>
+
+     </div>
+
+{% endblock %}
+

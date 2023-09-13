@@ -1,0 +1,59 @@
+<html>
+    <body>
+        <div id="mapdiv"></div>
+        <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+        <script>
+            map = new OpenLayers.Map("mapdiv");
+            map.addLayer(new OpenLayers.Layer.OSM());
+
+            var aarhusLat = new OpenLayers.LonLat( -4.42 ,36.719444 )
+                .transform(
+                    new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+                    map.getProjectionObject() // to Spherical Mercator Projection
+                );
+            var zoom=11;
+
+            var markers = new OpenLayers.Layer.Markers( "Markers" );
+            map.addLayer(markers);
+            map.setCenter (aarhusLat, zoom);
+
+
+
+            var locationData = {
+                gps_latitude : [{% for mydata in myIotdata %}
+                    {{ mydata.gps_latitude }},
+                {% endfor %}],
+                gps_longitude : [{% for mydata in myIotdata %}
+                    {{ mydata.gps_longitude }},
+                {% endfor %}]
+            }
+
+            /* console.log(locationData.gps_latitude[0]); */
+
+            var i;
+            for (i = 0; i < locationData.gps_latitude.length; i++) {
+
+                var aarhusLat2 = new OpenLayers.LonLat( locationData.gps_longitude[i], locationData.gps_latitude[i] )
+                    .transform(
+                    new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+                    map.getProjectionObject() // to Spherical Mercator Projection
+                );
+            markers.addMarker(new OpenLayers.Marker(aarhusLat2));
+                        var student = new OpenLayers.Layer.Text('GPS')
+
+                        // A popup with some information about our location
+                        var popup = new OpenLayers.Popup.FramedCloud(
+                        "Popup",
+                        aarhusLat2,
+                        // I added a size to make it fit in the small fiddle window
+                        new OpenLayers.Size(100,100),
+                                "Name", // Here i would like to display the data from locationdata.
+                        null,
+                        true // set to true to enable a (x) button. false othervise
+                    );
+                    map.addPopup(popup); //Draw popup window on map.
+                        map.addLayer(student);
+                    }
+        </script>
+    </body>
+</html>

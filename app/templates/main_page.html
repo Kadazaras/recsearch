@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<body>
+    <div id="map"></div>
+
+    <script>
+        function log_bounds(e) {
+        var bounds = map.getBounds();
+        console.log(bounds);
+        retrieve_data(JSON.stringify(bounds))
+        }
+
+        function plot_marker(data) {
+        data_json = JSON.parse(data)
+        var markers = new L.MarkerClusterGroup();
+        for (var i=0; i < data_json.length; i++) {
+           //console.log(data_json[i])
+            //var mark = L.marker([data_json[i].lat, data_json[i].long]);
+            markers.addLayer(L.marker([data_json[i].lat, data_json[i].long]));
+           // mark.addTo(map).bindPopup('{Test Event}<br>{www.testurl.ole}');
+        }
+        map.addLayer(markers);
+        }
+
+        function marker_list(data) {
+        data_json = JSON.parse(data)
+        for (var i=0; i < data_json.length; i++) {
+           window.markerTrack.push(data_json[i])
+        }
+        }
+
+        function retrieve_data(bounds) {
+            $.ajax({
+            type: 'POST',
+            data: {
+            bounds: bounds
+            },
+            url: "/retrieve_data",
+            success: function(response){
+            plot_marker(response)
+            marker_list(response)
+            },
+            error: showError
+            });
+            };
+        function showError() {
+            alert("failure");
+            }
+
+        var map = L.map('map').setView([36.719444,-4.42], 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors'}).addTo(map);
+        //var mark = L.marker([{{lat}}, {{long}}]);
+        //mark.addTo(map).bindPopup('{Test Event}<br>{www.testurl.ole}');
+        map.on('moveend', log_bounds);
+        L.Control.geocoder({defaultMarkGeocode: false}).addTo(map);
+        window.onload = log_bounds
+
+    </script>
+        <script>
+
+
+    </script>
+</body>
+{% endblock %}

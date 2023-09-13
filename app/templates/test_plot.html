@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+
+<script>
+
+function retrieve_plot() {
+    $.ajax({
+      type: 'POST',
+      data: {
+        month: document.getElementById("selector").value
+        },
+      url: "/retrieve_plot",
+      success: function(response){
+                $('#text').html(response)
+            },
+      error: showError
+    });
+    event.preventDefault();
+  };
+
+function showError() {
+    alert("failure");
+}
+
+
+
+</script>
+
+<div class="row">
+<div class="col-sm-1">
+
+</div>
+<div class="col-sm-10">
+<select id="selector" class="form-select" aria-label="Default select example" onchange="retrieve_plot()">
+{% for date in listita %}
+  <option value={{date}}>{{date}}</option>
+{% endfor %}
+</select>
+</div>
+<div class="col-sm-1">
+
+</div>
+</div>
+
+<div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8">
+    <div class="row" id="text"></div>
+  </div>
+  <div class="col-sm-2"></div>
+</div>
+
+
+<script>window.onLoad = retrieve_plot();</script>
+
+{% endblock %}
+

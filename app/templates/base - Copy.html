@@ -1,0 +1,76 @@
+{% extends 'bootstrap/base.html' %}
+
+
+{% block head %}
+
+    {{ super() }}
+    {% if title %}
+        <title> {{ title }} - Book Blog</title>
+    {% else %}
+        <title> Welcome to Book Blog!</title>
+    {% endif %}
+
+  {% block styles %}
+    <!-- Bootstrap -->
+    <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.2.0/bokeh.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.2.0/bokeh-widgets.css" rel="stylesheet" type="text/css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.2.0/bokeh-tables.css" rel="stylesheet" type="text/css">
+    <link href="{{bootstrap_find_resource('css/bootstrap.css', cdn='bootstrap')}}" rel="stylesheet">
+  {% endblock %}
+{% endblock %}
+
+{% block scripts %}
+  
+  
+  <!--<script src="{{bootstrap_find_resource('jquery.js', cdn='jquery')}}"></script>-->
+  <!--<script src="{{bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap')}}"></script>-->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.2.0/bokeh.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.2.0/bokeh-widgets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/1.2.0/bokeh-tables.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+{%- endblock scripts %}
+
+{% block navbar %}
+    <nav class="navbar navbar-default">
+            EXPENSE TRACK:
+          <a href="{{ url_for('index') }}">Home</a>
+          {% if current_user.is_anonymous %}
+          <a href="{{ url_for('login') }}">Login</a>
+          {% else %}
+          <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
+          <a href="{{ url_for('logout') }}">Logout({{current_user.username}})</a>
+          {% endif %}
+          <a href="{{ url_for('explore') }}">Explore</a>
+          <a href="{{ url_for('test') }}">Test</a>
+          <a href="{{ url_for('submitted')}}">Plot</a>
+          <a href="{{ url_for('full_year') }}">Complete</a>
+
+          
+    </nav>
+{% endblock %}
+
+
+
+{% block content %}
+    <div class="container">
+      <style>
+body {
+  background-color: #92a8d1;
+}
+</style>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {# application content needs to be provided in the app_content block #}
+        {% block app_content %}{% endblock %}
+    </div>
+{% endblock %}
+
